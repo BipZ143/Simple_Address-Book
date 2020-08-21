@@ -28,29 +28,24 @@ public class AddressBook extends JFrame implements ActionListener
     detailsFont = new Font("SansSerif", Font.PLAIN, 14);
 
     /**navigation buttons. */
-    private JButton
-    first = new JButton("First"), 
+    private JButton 
     previous = new JButton("< Previous"),
-    next = new JButton("Next >"),
-    last = new JButton("Last");
+    next = new JButton("Next >");
 
     /** buttons */
     private JButton
-    addContact = new JButton("Add new contact"),
-    deleteContact = new JButton("Delete contact"),
+    addContact = new JButton("Add"),
+    deleteContact = new JButton("Delete"),
     deleteAll = new JButton("Delete all"), 
-    findContact = new JButton("Find exact name"),
-    findPartial = new JButton("Find partial name");
-    //sortAtoZ = new JButton("Sort A to Z"),        
-    //sortZtoA = new JButton("Sort Z to A");        
-
+    findContact = new JButton("Search by name"),
+    updateContact =new JButton("Update");
+            
 
     private JTextField
     nameField = new JTextField(20),
     addressField = new JTextField(30),
     mobileField = new JTextField(12),
     emailField = new JTextField(30);
-
     /** The contact details drawing panel. */
     @SuppressWarnings("serial")
 	private JPanel contactDetails = new JPanel()
@@ -65,22 +60,17 @@ public class AddressBook extends JFrame implements ActionListener
 
     public static void main(String[] args)
     {
+    	
         AddressBook contacts = new AddressBook();
         contacts.setSize(windowWidth, windowHeight);
         contacts.setLocation(windowLocationX, windowLocationY);
         contacts.setTitle("Address Book");
-        contacts.setUpAddressBook();
         contacts.setUpGUI();
         contacts.setVisible(true);
+        
     }
 
-    private void setUpAddressBook()
-    {
-        currentSize = 0;
-        addContact("Bhanupratap Sahoo", "Puri,Odisha,India", "9776399173", "sahoobhanupratap2@gmail.com");
-        currentContact = 0;
-    }
-
+   
     private void setUpGUI()
     {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -90,15 +80,11 @@ public class AddressBook extends JFrame implements ActionListener
 
         //navigation
         window.add(new JLabel(""));
-        window.add(first);
-        first.addActionListener(this);
         window.add(previous);
         previous.addActionListener(this);
         window.add(next);
         next.addActionListener(this);
-        window.add(last);
-        last.addActionListener(this);
-
+  
         //graphics panel
         contactDetails.setPreferredSize(new Dimension(panelWidth, panelHeight));
         contactDetails.setBackground(backGroundColour);
@@ -116,12 +102,12 @@ public class AddressBook extends JFrame implements ActionListener
         JPanel findPanel = new JPanel();
         findPanel.add(findContact);
         findContact.addActionListener(this);
-       // findPanel.add(findPartial);
-       // findPartial.addActionListener(this);
+        JPanel updatePanel = new JPanel();
+        updateContact.addActionListener(this);
         window.add(findPanel);
 
         JPanel namePanel = new JPanel();
-        namePanel.add(new JLabel("New/find name:"));
+        namePanel.add(new JLabel("Search/New name:"));
         namePanel.add(nameField);
         window.add(namePanel);
 
@@ -154,7 +140,7 @@ public class AddressBook extends JFrame implements ActionListener
         g.setColor(textColour);
         g.setFont(detailsFont);
         if (currentContact == -1)
-            g.drawString("There are no contacts", leftMargin, detailsY);
+            g.drawString("Hey,There are no contacts", leftMargin, detailsY);
         else
         {
             g.drawString(name[currentContact], leftMargin, detailsY);
@@ -166,17 +152,10 @@ public class AddressBook extends JFrame implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getSource() == first)
-            if (currentContact >= 0)
-                currentContact = 0;
-            else
-                currentContact = -1;
         if (e.getSource() == previous && currentContact > 0)
             currentContact--;
         if (e.getSource() == next && currentContact < currentSize - 1)
             currentContact++;
-        if (e.getSource() == last)
-            currentContact = currentSize - 1;
         if (e.getSource() == addContact)
             doAddContact();
         if (e.getSource() == deleteContact)
@@ -185,11 +164,11 @@ public class AddressBook extends JFrame implements ActionListener
             doDeleteAll();
         if (e.getSource() == findContact)
             doFindContact();
+        if (e.getSource() == updateContact)
+        	doUpdateContact();
         repaint();
     }
-      
-        // Re-order the contacts by name A to Z
-
+     
     private void doAddContact()
     {
         String newName = nameField.getText();       nameField.setText("");
@@ -243,10 +222,13 @@ public class AddressBook extends JFrame implements ActionListener
             nameField.setText(""); 
         }
     }
-
-
+    private void doUpdateContact() {
+		
+    	
+		
+	}
     /** Maximum capacity of the database. */
-    private final int databaseSize = 10;
+    private final int databaseSize = 100;
 
     /** To hold contacts' names, addresses, etc. */
     private String[]
